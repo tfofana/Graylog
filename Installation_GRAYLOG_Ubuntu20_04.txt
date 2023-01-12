@@ -1,0 +1,84 @@
+########### INSTALLATION DE GRAYLOG ############################33
+-------------Prerequis-----------------------------------------
+
+1-sudo apt-get update && sudo apt-get upgrade
+2- sudo apt-get install -y apt-transport-https openjdk-8-jre-headless uuid-runtime pwgen curl dirmngr
+3- java -version
+-----------------Installation Elasticsearch: ---------------------------------------------------
+4-wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+5-echo "deb https://artifacts.elastic.co/packages/oss-7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
+7-sudo apt-get update && sudo apt-get install elasticsearch-oss
+8-sudo systemctl enable elasticsearch
+9- sudo nano /etc/elasticsearch/elasticsearch.yml
+cluster.name: graylog
+action.auto_create_index: false
+10-sudo systemctl restart elasticsearch
+11-curl -X GET http://localhost:9200
+12-curl -XGET 'http://localhost:9200/_cluster/health?pretty=true'
+
+-----------------------------Installation de MongoDB----------------------------------------------------
+13-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
+14-echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+15-sudo apt-get update
+16-sudo apt-get install -y mongodb-org
+17-sudo systemctl start mongod
+18-sudo systemctl enable mongod
+
+-----------------------------Installation de Graylog-------------------------------------------------------
+19-wget https://packages.graylog2.org/repo/packages/graylog-4.3-repository_latest.deb
+20-sudo dpkg -i graylog-4.3-repository_latest.deb
+21-sudo apt-get update && sudo apt-get install graylog-server graylog-enterprise-plugins graylog-integrations-plugins graylog-enterprise-integrations-plugins
+
+22-echo -n motdepasse | sha256sum 
+root@testlog:~# echo -n motdepasse | sha256sum
+73ab9558aeef3ef4872f236898ce4b3d7deb4bdfa1c3b3ad814de58bebc67ab8  -
+
+23-sudo nano /etc/graylog/server/server.conf
+root_password_sha2 =73ab9558aeef3ef4872f236898ce4b3d7deb4bdfa1c3b3ad814de58bebc67ab8
+
+24-root@testlog:~# pwgen -N 1 -s 96
+0iEg3xeKnKvBFWuMSbCFsccZdAb9oMyQgqXunGlJ6mC66ll7TEmZnm95UW80ORdL99SElEHKJszi79hQ7ycaRTW9SCU9BrQp
+
+password_secret =0iEg3xeKnKvBFWuMSbCFsccZdAb9oMyQgqXunGlJ6mC66ll7TEmZnm95UW80ORdL99SElEHKJszi79hQ7ycaRTW9SCU9BrQp
+
+25-sudo systemctl start mongod
+26-sudo systemctl enable graylog-server.service
+27-systemctl status graylog-server.service
+28-sudo tail -f /var/log/graylog-server/server.log
+
+####### Remarque: il faut fixer l'adresse IP du serveur dans le fichier (nano /etc/graylog/server/server.conf):  ########
+Default: 127.0.0.1:9000
+http_bind_address = 192.168.2.146:9000
+
+########################################## Lien et credentials de connexion#########################################"""
+http://192.168.2.146:9000
+
+login: admin
+PWD: adminoneci
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
